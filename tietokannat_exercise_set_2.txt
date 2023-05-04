@@ -1,0 +1,104 @@
+====== Exercise 2 - SQL Basics 1 ======
+
+1 | Select employees who live in Winnipeg.
+--------------------------------------------------
+select * 
+from EMPS 
+where city = 'winnipeg'
+--------------------------------------------------
+
+##################################################
+2 | Select firstname and lastname of employees whose firstname starts with MI.
+--------------------------------------------------
+select gname, surname 
+from emps
+where gname like 'MI%' 
+--------------------------------------------------
+
+##################################################
+3 | Select employees (firstname and lastname) whose employee number is between 50 and 70.
+--------------------------------------------------
+select gname, surname, empnum 
+from EMPS 
+where empnum > 49 and empnum < 71 
+--------------------------------------------------
+
+##################################################
+4 | Select employees whose rate value is greater than 9 and employee number lower than 150.
+--------------------------------------------------
+select * 
+from EMPS 
+where rate > 9 and empnum < 150
+--------------------------------------------------
+
+##################################################
+5 | Select employees whose phonenumber's third number is 7 and who come from Edmonton or Newton.
+--------------------------------------------------
+select * 
+from emps
+where phone like '__7%' and (city = 'edmonton' or city = 'newton')
+--------------------------------------------------
+
+##################################################
+6 | Select all different cities and show the result set in descending order.
+--------------------------------------------------
+select city 
+from EMPS 
+order by city desc
+--------------------------------------------------
+
+##################################################
+7 | Select employees whose department is not A, B or C.
+--------------------------------------------------
+select * 
+from emps
+where dept not like 'a%' and dept not like 'b%' and dept not like 'c%'
+--------------------------------------------------
+
+##################################################
+8 | Select all departments, but show only five departments starting from tenth row.
+--------------------------------------------------
+select dept 
+from EMPS 
+limit 5 offset 9
+--------------------------------------------------
+
+##################################################
+9 | Select departments with budget between 57000 and 93000. Set column name as Limited.
+--------------------------------------------------
+select dept as Limited 
+from dept
+where budget > 56999 and budget < 93001 
+--------------------------------------------------
+
+##################################################
+10 | Select department having ABEY M as a manager.
+--------------------------------------------------
+select dept 
+from dept
+where manager = 'ABEY M' 
+--------------------------------------------------
+
+##################################################
+11 | Select departments having manager name starting with letter S and budget greater than 100000.
+--------------------------------------------------
+select dept 
+from dept
+where manager like 'S%' and budget > 99999 
+--------------------------------------------------
+
+##################################################
+12 | Select departments with DEPT not being between H-T. DEPT and manager should be included in the result set.
+--------------------------------------------------
+select dept, manager 
+from dept
+where dept not between 'H' and 'U'
+--------------------------------------------------
+
+##################################################
+13 | Select employees whose firstnames second letter is A, last letter in surname is N and computer (PC) starts with string T0.
+--------------------------------------------------
+select * 
+from emps
+where gname like '_a%' and surname like '%n' and pc like 't0%'
+--------------------------------------------------

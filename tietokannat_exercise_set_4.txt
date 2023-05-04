@@ -1,0 +1,125 @@
+====== Exercise 4 - SQL Basics 3 ======
+
+1 | Select employees who work on department A and create a column where employee names are presented in a following format: Surname First_letter_of_firstname (For example Johnson B). Order result set by surname. In addition for this new name column, present department Duty in the result set.
+--------------------------------------------------
+SELECT CONCAT(surname, ' ', LEFT(gname, 1)) AS name, duty
+FROM emps join dept
+on emps.dept = dept.dept and dept.dept = 'A'
+ORDER BY surname
+--------------------------------------------------
+
+##################################################
+2 | Select all employees and include also those who don't have department set. Include firstname, surname, department and duty of department in the result set. (Please notice that by default all employees have department set so this query won't return any rows with default data!)
+--------------------------------------------------
+SELECT gname, surname, emps.dept, duty
+FROM emps join dept
+on emps.dept = dept.dept
+--------------------------------------------------
+
+##################################################
+3 | Select employees who have MB as a province (PROV) and whose manager is Black D. Present employee number and whole name in the result set.
+--------------------------------------------------
+SELECT empnum, concat(gname, ' ', surname) as name
+FROM emps join dept
+on emps.dept = dept.dept and emps.prov = 'MB' and dept.manager = 'Black D'
+--------------------------------------------------
+
+##################################################
+4 | Select all managers who have more than 10 employees on their department. Present manager and employee count in the result set. Order result set by employee count in descending order.
+--------------------------------------------------
+SELECT dept.manager, COUNT(*) AS employee_count
+FROM dept
+INNER JOIN emps ON dept.dept = emps.dept
+GROUP BY dept.manager
+HAVING COUNT(*) > 10
+ORDER BY employee_count DESC
+--------------------------------------------------
+
+##################################################
+5 | Create two columns for the result set: One for employees so that employee name is presented in the following format: Firstname Surname (for example Mike Johnson) and another which tells whether the person is an employee or a manager. Give columns the following names for the result set: Name and Type. Order results primarily by type and secondarily by name.
+--------------------------------------------------
+SELECT CONCAT(E.gname, ' ', E.surname) AS Name,
+	CASE 
+		WHEN CONCAT(E.surname, ' ', LEFT(E.gname,1)) IN ( SELECT manager FROM dept ) then 'Manager' ELSE 'Employee' END AS Type
+FROM emps E LEFT JOIN dept D
+ON E.dept = D.dept
+ORDER BY Type, Name;
+--------------------------------------------------
+
+##################################################
+6 | Use UNION to combine the following two queries: Select employees whose department is between A-D and employees whose firstname starts with letter B. Include department, firstname, surname and city in the result set.
+--------------------------------------------------
+SELECT dept, gname, surname, city
+FROM emps
+WHERE dept BETWEEN 'A' AND 'D'
+UNION
+SELECT dept, gname, surname, city
+FROM emps
+WHERE gname LIKE 'B%'
+ORDER BY dept, gname, surname, city;
+--------------------------------------------------
+
+##################################################
+7 | Use both UNION and JOIN and get the following information in one result set:
+
+    Employees who work in department having budget between 50000-100000
+    Employees whose computer identifier (PC) starts with letter T
+    Result set should include department, budget, employees firstname and surname as well as computer's identifier
+    Result set should be in ascending order by department
+
+--------------------------------------------------
+SELECT d.dept, d.budget, e.gname, e.surname, e.pc
+FROM dept d
+JOIN emps e ON d.dept = e.dept
+WHERE d.budget BETWEEN 50000 AND 100000
+
+UNION
+
+SELECT d.dept, d.budget, e.gname, e.surname, e.pc
+FROM dept d
+JOIN emps e ON d.dept = e.dept
+WHERE e.pc LIKE 'T%'
+ORDER BY dept ASC;
+--------------------------------------------------
+
+##################################################
+8 | Select employees working in department A who have different rate value than any employees in department B. Tip: Use IN subquery!
+--------------------------------------------------
+SELECT *
+FROM emps
+WHERE dept = 'A' AND rate NOT IN 
+	(SELECT rate
+    FROM emps
+    WHERE dept = 'B');
+--------------------------------------------------
+
+##################################################
+9 | Select employees whose department's duty is same as the employee Peter Curry. Result set should include department, duty and the firstname and surname of employee.
+--------------------------------------------------
+SELECT e.dept, d.duty, e.gname, e.surname
+FROM emps e
+JOIN dept d ON e.dept = d.dept
+WHERE e.dept = (SELECT dept FROM emps WHERE gname = 'Peter' AND surname = 'Curry')
+AND d.duty = (SELECT duty FROM dept WHERE dept = e.dept)
+AND (e.gname != 'Peter' OR e.surname != 'Curry');
+--------------------------------------------------
+
+##################################################
+10 | Select firstname, surname and phone numbers of employees whose department's duty is marketing or whose department's manager is Mark G.
+--------------------------------------------------
+SELECT e.gname, e.surname, e.phone
+FROM emps e
+INNER JOIN dept d ON e.dept = d.dept
+WHERE d.duty = 'marketing' OR d.manager = 'Mark G'
+--------------------------------------------------
+
+##################################################
+11 | Use subquery to select all employees whose rate value is the greatest possible.
+--------------------------------------------------
+SELECT *
+FROM emps
+WHERE rate = (
+  SELECT MAX(rate)
+  FROM emps
+)
+--------------------------------------------------

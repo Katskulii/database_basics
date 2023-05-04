@@ -1,0 +1,44 @@
+====== Exercise 6 - SQL Basics 5 ======
+
+1 | Insert two new rows for SALARIES table:
+
+    3500 euros for employee 10
+    3300 euros for employee 20
+
+--------------------------------------------------
+INSERT INTO SALARIES (salary, EMPNUM, fromdate) VALUES (3500.00, 10, NOW());
+INSERT INTO SALARIES (salary, EMPNUM, fromdate) VALUES (3300.00, 20, NOW());
+--------------------------------------------------
+
+##################################################
+2 | Change the salary for employee 20 so that it will be 3600 euros.
+
+--------------------------------------------------
+UPDATE SALARIES
+SET salary = 3600.00
+WHERE EMPNUM = 20;
+--------------------------------------------------
+
+##################################################
+3 | Create a new table called SALARYHISTORY with similar structure as SALARIES table.
+--------------------------------------------------
+USE exercise;
+CREATE TABLE  SALARYHISTORY(
+salaryID INT PRIMARY KEY,
+salary DECIMAL(10, 2));
+--------------------------------------------------
+
+##################################################
+4 | Copy the content of SALARIES table to SALARYHISTORY with one query.
+--------------------------------------------------
+INSERT INTO SALARYHISTORY (salaryID, salary, EMPNUM, fromdate)
+SELECT salaryID, salary, EMPNUM, fromdate
+FROM SALARIES;
+--------------------------------------------------
+
+##################################################
+5 | Remove the rows referring to employee 20 from SALARIES and SALARYHISTORY tables.
+--------------------------------------------------
+DELETE FROM SALARIES WHERE EMPNUM = 20;
+DELETE FROM SALARYHISTORY WHERE EMPNUM = 20;
+--------------------------------------------------
